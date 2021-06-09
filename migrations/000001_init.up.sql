@@ -4,7 +4,7 @@ CREATE TABLE brands (
 );
 
 CREATE TABLE sites (
-    id serial,
+    id serial PRIMARY KEY,
     site text NOT NULL
 );
 
@@ -13,6 +13,13 @@ CREATE TABLE sneakers (
     brand_id int NOT NULL,
     model_name text UNIQUE,
     FOREIGN KEY (brand_id) REFERENCES brands(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE sneaker_inventory (
+    id serial PRIMARY KEY,
+    sku text NOT NULL,
+    quantity int NOT NULL,
+    model_name text
 );
 
 CREATE TABLE site_size_price (
@@ -27,6 +34,11 @@ CREATE TABLE site_size_price (
     FOREIGN KEY (sneaker_id) REFERENCES sneakers(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE user_roles (
+    id serial PRIMARY KEY,
+    user_role text UNIQUE 
+);
+
 CREATE TABLE users (
     id serial PRIMARY KEY,
     first_name text NOT NULL,
@@ -35,19 +47,6 @@ CREATE TABLE users (
     password text NOT NULL,
     user_role_id int NOT NULL,
     FOREIGN KEY (user_role_id) REFERENCES user_roles(id) ON UPDATE CASCADE ON DELETE RESTRICT
-);
-
-CREATE TABLE user_roles (
-    id serial PRIMARY KEY,
-    user_role text UNIQUE 
-);
-
-
-CREATE TABLE sneaker_inventory (
-    id serial PRIMARY KEY,
-    sku text,
-    quantity int NOT NULL,
-    model_name text
 );
 
 
@@ -59,15 +58,16 @@ CREATE TABLE tax_rates (
 
 CREATE TABLE carriers (
     id serial PRIMARY KEY,
-    name text,
+    name text NOT NULL,
     icon_url text
-)
+);
+
 CREATE TABLE shipping_methods (
     id serial PRIMARY KEY,
     carrier_id int NOT NULL,
     method text NOT NULL,
     cost int NOT NULL,
-    FOREIGN KEY carrier_id REFERENCES carriers(id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (carrier_id) REFERENCES carriers(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE orders (
@@ -78,10 +78,9 @@ CREATE TABLE orders (
     tax_rate_id int NOT NULL,
     shipping_method_id int NOT NULL,
     total int NOT NULL,
-    FOREIGN KEY user_id REFERENCES users(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY tax_rate_id REFERENCES tax_rates(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY shipping_method_id REFERENCES shipping_methods(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-
+    FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (tax_rate_id) REFERENCES tax_rates(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (shipping_method_id) REFERENCES shipping_methods(id) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE order_items (
