@@ -1,24 +1,38 @@
 CREATE TABLE brands (
     id serial PRIMARY KEY,
-    brand text NOT NULL UNIQUE
+    name text NOT NULL UNIQUE
 );
+
+INSERT INTO
+    brands (name)
+VALUES
+    ('nike'),
+    ('adidas'),
+    ('jordan');
 
 CREATE TABLE sites (
     id serial PRIMARY KEY,
-    site text NOT NULL
+    name text NOT NULL
 );
+
+INSERT INTO
+    sites (name)
+VALUES
+    ('STADIUMGOODS');
 
 CREATE TABLE sneakers (
     id serial PRIMARY KEY,
     brand_id int NOT NULL,
     model_name text UNIQUE,
+    release_date timestamptz,
+    photos text [],
     FOREIGN KEY (brand_id) REFERENCES brands(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE sneaker_inventory (
     id serial PRIMARY KEY,
     sku text NOT NULL,
-    quantity int NOT NULL,
+    quantity int DEFAULT 0,
     model_name text
 );
 
@@ -26,7 +40,7 @@ CREATE TABLE site_size_price (
     id serial PRIMARY KEY,
     site_id int NOT NULL,
     sneaker_id int NOT NULL,
-    size_id int NOT NULL,
+    size text NOT NULL,
     price int NOT NULL,
     inventory_id int NOT NULL,
     FOREIGN KEY (inventory_id) REFERENCES sneaker_inventory(id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -36,8 +50,15 @@ CREATE TABLE site_size_price (
 
 CREATE TABLE user_roles (
     id serial PRIMARY KEY,
-    user_role text UNIQUE 
+    user_role text UNIQUE
 );
+
+INSERT INTO
+    user_roles (user_role)
+VALUES
+    ('customer'),
+    ('employee'),
+    ('admin');
 
 CREATE TABLE users (
     id serial PRIMARY KEY,
@@ -49,18 +70,29 @@ CREATE TABLE users (
     FOREIGN KEY (user_role_id) REFERENCES user_roles(id) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-
 CREATE TABLE tax_rates (
     id serial PRIMARY KEY,
     state text NOT NULL,
     tax_rate int NOT NULL
 );
 
+INSERT INTO
+    tax_rates (state, tax_rate)
+VALUES
+    ('NY', 9);
+
 CREATE TABLE carriers (
     id serial PRIMARY KEY,
     name text NOT NULL,
     icon_url text
 );
+
+INSERT INTO
+    carriers (name)
+VALUES
+    ('fedex'),
+    ('ups'),
+    ('usps');
 
 CREATE TABLE shipping_methods (
     id serial PRIMARY KEY,
