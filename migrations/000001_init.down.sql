@@ -1,13 +1,12 @@
-DROP TABLE users;
 DROP TABLE site_size_price;
-DROP TABLE sneakers;
-DROP TABLE sneaker_inventory;
 DROP TABLE order_items;
+DROP TABLE sneaker_inventory;
+DROP TABLE sneakers;
 DROP TABLE orders;
 DROP TABLE shipping_methods;
 DROP TABLE carriers;
 DROP TABLE tax_rates;
-DROP TABLE user_roles;
 DROP TABLE users;
+DROP TABLE user_roles;
 DROP TABLE sites;
 DROP TABLE brands;
