@@ -96,11 +96,37 @@ VALUES
 
 CREATE TABLE shipping_methods (
     id serial PRIMARY KEY,
-    carrier_id int NOT NULL,
-    method text NOT NULL,
-    cost int NOT NULL,
-    FOREIGN KEY (carrier_id) REFERENCES carriers(id) ON UPDATE CASCADE ON DELETE CASCADE
+    name text NOT NULL
 );
+
+INSERT INTO
+    shipping_methods(name)
+VALUES
+    ('next-day'),
+    ('two-day'),
+    ('three-day');
+
+CREATE TABLE carrier_shipping_methods (
+    id serial PRIMARY KEY,
+    carrier_id int NOT NULL,
+    shipping_method_id int NOT NULL,
+    cost int NOT NULL,
+    FOREIGN KEY (carrier_id) REFERENCES carriers(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (shipping_method_id) REFERENCES shipping_methods(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+INSERT INTO
+    carrier_shipping_methods (carrier_id, shipping_method_id, cost)
+VALUES
+    (1, 1, '2000'),
+    (1, 2, '1700'),
+    (1, 3, '1400'),
+    (2, 1, '1700'),
+    (2, 2, '1500'),
+    (2, 3, '1200'),
+    (3, 1, '2000'),
+    (3, 2, '1800'),
+    (3, 3, '1600');
 
 CREATE TABLE orders (
     id serial PRIMARY KEY,
@@ -112,7 +138,7 @@ CREATE TABLE orders (
     total int NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (tax_rate_id) REFERENCES tax_rates(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY (shipping_method_id) REFERENCES shipping_methods(id) ON UPDATE CASCADE ON DELETE RESTRICT
+    FOREIGN KEY (shipping_method_id) REFERENCES shipping_methods(id) ON UPDATE CASCADE ON DELETE RESTRICT --didn't get added
 );
 
 CREATE TABLE order_items (
